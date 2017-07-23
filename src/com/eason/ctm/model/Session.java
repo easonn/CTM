@@ -16,5 +16,9 @@ public abstract class Session {
         this.startTime = Tools.getNextStartTime(startTime, talk);
         talkList.add(talk);
     }
-
+    
+    public List<Talk> getTalkList(){
+    	return this.talkList;
+    }
+    
 }

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 
 import org.junit.Test;
 
@@ -26,9 +27,9 @@ public class UnitTest {
         File file = new File("C:/Users/yinsh/Desktop/conference_info.txt");
         StringBuilder result = new StringBuilder();
         try {
-            BufferedReader br = new BufferedReader(new FileReader(file));// 构造一个BufferedReader类来读取文件
+            BufferedReader br = new BufferedReader(new FileReader(file));
             String s = null;
-            while ((s = br.readLine()) != null) {// 使用readLine方法，一次读一行
+            while ((s = br.readLine()) != null) {
                 result.append(System.lineSeparator() + s);
             }
             br.close();
@@ -52,5 +53,5 @@ public class UnitTest {
         String str = dateFormat.format(date);
         System.err.println(str);
     }
-
+    
 }

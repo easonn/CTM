@@ -2,15 +2,16 @@ package com.eason.ctm.model;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class AfternoonSession extends Session {
     
     boolean flag = false;
 
-    public AfternoonSession() {
+    @SuppressWarnings({ "unused", "deprecation" })
+	public AfternoonSession() {
         Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mmp ");
-        date.setHours(0);
+        date.setHours(1);
         date.setMinutes(0);
         date.setSeconds(0);
         startTime = date;

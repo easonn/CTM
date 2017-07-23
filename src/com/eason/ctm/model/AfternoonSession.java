@@ -11,7 +11,7 @@ public class AfternoonSession extends Session {
     @SuppressWarnings({ "unused", "deprecation" })
 	public AfternoonSession() {
         Date date = new Date();
-        date.setHours(1);
+        date.setHours(13);
         date.setMinutes(0);
         date.setSeconds(0);
         startTime = date;

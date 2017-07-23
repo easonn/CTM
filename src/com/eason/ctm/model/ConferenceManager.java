@@ -51,7 +51,78 @@ public class ConferenceManager {
 	}
 
 	public static void main(String[] args) {
-		new ConferenceManager().scheduleTrack();
+		ConferenceManager cm = new ConferenceManager();
+		cm.scheduleTrack();
+		cm.printResult();
+		
+	}
+
+	// Core code
+	public void arrangeTime(List<Talk> talkResult, int bestTime, int index) {
+		if (bestTime <= 0 || index >= initTalkList.size() || talkResult.size() > 0) {
+			return;
+		}
+		int tmpTime = initTalkList.get(index).getTimer();
+		if (bestTime == tmpTime) {
+			tmpResult.push(initTalkList.get(index));
+			for (Talk talk : tmpResult) {
+				talkResult.add(talk);
+				initTalkList.remove(talk);
+			}
+			return;
+		}
+		tmpResult.push(initTalkList.get(index));
+		arrangeTime(talkResult, bestTime - tmpTime, ++index);
+
+		tmpResult.pop();
+
+		arrangeTime(talkResult, bestTime, ++index);
+	}
+
+	public Session getBestPlan(Session session, int limitTime) {
+		for (int bestTime = limitTime; bestTime > 0; bestTime--) {
+			talkResult = new ArrayList<Talk>();
+			tmpResult = new LinkedList<Talk>();
+			arrangeTime(talkResult, bestTime, 0);
+			if (talkResult.size() > 0) {
+				for (int i = talkResult.size() - 1; i >= 0; i--) {
+					session.addTalk(talkResult.get(i));
+				}
+				break;
+			}
+		}
+		return session;
+	}
+
+	public void scheduleTrack() {
+
+		Session morningSession = scheduleMorningSession();
+		Session afternoonSession = scheduleAfternoonSession();
+		Track track = new Track(morningSession, afternoonSession);
+		trackList.add(track);
+		// If there any talk isn't schedule, run this method again, new another
+		// Track;
+		if (initTalkList.size() > 0) {
+			scheduleTrack();
+		}
+	}
+
+	public Session scheduleMorningSession() {
+
+		Session session = new MorningSession();
+		getBestPlan(session, MORNING_LIMIT);
+
+		return session;
+
+	}
+
+	public Session scheduleAfternoonSession() {
+		Session session = new AfternoonSession();
+		getBestPlan(session, AFTERNOON_LIMIT);
+		return session;
+	}
+
+	public void printResult() {
 		for (int i = 1; i < trackList.size() + 1; i++) {
 			System.out.println("Track " + i + ":");
 			System.out.println();
@@ -79,66 +150,4 @@ public class ConferenceManager {
 		}
 	}
 
-	public void scheduleTrack() {
-
-		Session morningSession = scheduleMorningSession();
-		Session afternoonSession = scheduleAfternoonSession();
-		Track track = new Track(morningSession, afternoonSession);
-		trackList.add(track);
-		// If there any talk isn't schedule, run this method again, new another Track;
-		if (initTalkList.size() > 0) {
-			scheduleTrack();
-		}
-	}
-
-	public Session scheduleMorningSession() {
-
-		Session session = new MorningSession();
-		getBestPlan(session, MORNING_LIMIT);
-
-		return session;
-
-	}
-
-	public Session scheduleAfternoonSession() {
-		Session session = new AfternoonSession();
-		getBestPlan(session, AFTERNOON_LIMIT);
-		return session;
-	}
-
-	public Session getBestPlan(Session session, int limitTime) {
-		for (int bestTime = limitTime; bestTime > 0; bestTime--) {
-			talkResult = new ArrayList<Talk>();
-			tmpResult = new LinkedList<Talk>();
-			arrangeTime(talkResult, bestTime, 0);
-			if (talkResult.size() > 0) {
-				for (int i = talkResult.size() - 1; i >= 0; i--) {
-					session.addTalk(talkResult.get(i));
-				}
-				break;
-			}
-		}
-		return session;
-	}
-
-	public void arrangeTime(List<Talk> talkResult, int bestTime, int index) {
-		if (bestTime <= 0 || index >= initTalkList.size() || talkResult.size() > 0) {
-			return;
-		}
-		int tmpTime = initTalkList.get(index).getTimer();
-		if (bestTime == tmpTime) {
-			tmpResult.push(initTalkList.get(index));
-			for (Talk talk : tmpResult) {
-				talkResult.add(talk);
-				initTalkList.remove(talk);
-			}
-			return;
-		}
-		tmpResult.push(initTalkList.get(index));
-		arrangeTime(talkResult, bestTime - tmpTime, ++index);
-
-		tmpResult.pop();
-
-		arrangeTime(talkResult, bestTime, ++index);
-	}
 }
